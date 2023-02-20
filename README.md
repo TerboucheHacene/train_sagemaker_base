@@ -27,3 +27,6 @@ A repo to train a Custom Deep Learning Model with Amazon SageMaker
     ./build_and_push.sh
 
 
+## 5. Launch the Training Job
+
+     aws sagemaker create-training-job --cli-input-json file://training-config.json
