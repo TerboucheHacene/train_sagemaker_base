@@ -1,28 +1,29 @@
-# train_sagemaker_base
+# Train a Deep Learning Model on SageMaker
 A repo to train a Custom Deep Learning Model with Amazon SageMaker
 
 
-aws s3 mb s3://sagemaker-train-data-hacene
-aws s3 mb s3://sagemaker-output-data-hacene
+## 1. How to create buckets for input and output
+    aws s3 mb s3://sagemaker-train-data-hacene
+    aws s3 mb s3://sagemaker-output-data-hacene
 
-kaggle datasets download -d alxmamaev/flowers-recognition
-unzip flowers-recognition.zip
-aws s3 sync flowers s3://sagemaker-train-data-hacene
+## 2. How to download and uplaod the dataset to S3
+    kaggle datasets download -d alxmamaev/flowers-recognition
+    unzip flowers-recognition.zip
+    aws s3 sync flowers s3://sagemaker-train-data-hacene/flowers
 
-account=$(aws sts get-caller-identity --query Account --output text)
-echo "account $account"
 
-# Get the region defined in the current configuration (default to us-east-1 if none defined)
-region=$(aws configure get region)
-region=${region:-us-east-1}
-echo "region $region"
+## 3. Create an ECR Repository
 
-aws ecr get-login-password --region $region| docker login --username AWS --password-stdin $account.dkr.ecr.$region.amazonaws.com
+    account=$(aws sts get-caller-identity --query Account --output text --profile=hacene)
 
-aws ecr create-repository --repository-name sagemaker-images
+    region=$(aws configure get region)
+    
+    aws ecr get-login-password --region $region| docker login --username AWS --password-stdin $account.dkr.ecr.$region.amazonaws.com
 
-340195785701.dkr.ecr.us-east-1.amazonaws.com/sagemaker-images
+    aws ecr create-repository --repository-name train_sagemaker
 
-image="train_sagemaker"
-fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}:latest"
+## 4. Build and push the Image
+
+    ./build_and_push.sh
+
 

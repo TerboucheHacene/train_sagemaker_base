@@ -1,0 +1,31 @@
+{
+  "TrainingJobName": "my-training-job-5",
+  "AlgorithmSpecification": {
+    "TrainingImage": "340195785701.dkr.ecr.us-east-1.amazonaws.com/train_sagemaker:latest",
+    "TrainingInputMode": "File"
+  },
+  "RoleArn": "arn:aws:iam::340195785701:role/service-role/AmazonSageMaker-ExecutionRole-20210715T233566",
+  "InputDataConfig": [
+    {
+      "ChannelName": "flowers",
+      "DataSource": {
+        "S3DataSource": {
+          "S3DataType": "S3Prefix",
+          "S3Uri": "s3://sagemaker-train-data-hacene/flowers",
+          "S3DataDistributionType": "FullyReplicated"
+        }
+      }
+    }
+  ],
+  "OutputDataConfig": {
+    "S3OutputPath": "s3://sagemaker-output-data-hacene"
+  },
+  "ResourceConfig": {
+    "InstanceType": "ml.m5.large",
+    "InstanceCount": 1,
+    "VolumeSizeInGB": 75
+  },
+  "StoppingCondition": {
+    "MaxRuntimeInSeconds": 3600
+  }
+}
