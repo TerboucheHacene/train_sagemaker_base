@@ -22,6 +22,9 @@ A repo to train a Custom Deep Learning Model with Amazon SageMaker
 
     aws ecr create-repository --repository-name train_sagemaker
 
+    # delete the repository if it exists
+    aws ecr delete-repository --repository-name train_sagemaker --force --region $region
+
 ## 4. Build and push the Image
 
     ./build_and_push.sh

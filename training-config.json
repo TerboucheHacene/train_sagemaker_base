@@ -1,5 +1,5 @@
 {
-  "TrainingJobName": "my-training-job-5",
+  "TrainingJobName": "my-training-job-9",
   "AlgorithmSpecification": {
     "TrainingImage": "340195785701.dkr.ecr.us-east-1.amazonaws.com/train_sagemaker:latest",
     "TrainingInputMode": "File"
@@ -20,8 +20,14 @@
   "OutputDataConfig": {
     "S3OutputPath": "s3://sagemaker-output-data-hacene"
   },
+  "HyperParameters": {
+    "image_size": "224",
+    "epochs": "2",
+    "batch_size": "32",
+    "validation_split": "0.2"
+  },
   "ResourceConfig": {
-    "InstanceType": "ml.m5.large",
+    "InstanceType": "ml.g4dn.xlarge",
     "InstanceCount": 1,
     "VolumeSizeInGB": 75
   },

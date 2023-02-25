@@ -1,16 +1,31 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
+import argparse
 
 DATA_DIR = os.environ["SM_CHANNEL_FLOWERS"]
 OUTPUT_DIR = os.environ["SM_MODEL_DIR"]
+HPS = os.environ["SM_HPS"]
 
-IMG_SIZE = (150, 150)
-BATCH_SIZE = 128
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--image_size", type=int)
+    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--validation_split", type=float, default=0.2)
+    parser.add_argument("--epochs", type=int, default=2)
+    args, _ = parser.parse_known_args()
+    return args
 
 
 def train():
-    image_gen = ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2)
+    args = parse_args()
+    IMG_SIZE = (args.image_size, args.image_size)
+    BATCH_SIZE = args.batch_size
+    VALIDATION_SPLIT = args.validation_split
+    EPOCHS = args.epochs
+
+    image_gen = ImageDataGenerator(rescale=1.0 / 255, validation_split=VALIDATION_SPLIT)
 
     train_data_gen = image_gen.flow_from_directory(
         batch_size=BATCH_SIZE,
@@ -54,7 +69,7 @@ def train():
         metrics=["accuracy"],
     )
 
-    model.fit(train_data_gen, epochs=2)
+    model.fit(train_data_gen, epochs=EPOCHS)
     test_loss, test_accuracy = model.evaluate(test_data_gen)
     print(f"Test accuracy: {test_accuracy}")
 
